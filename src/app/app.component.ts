@@ -5,12 +5,13 @@ import { HeaderComponent } from './header/header.component';
 import { LoginComponent } from './login/login.component';
 import { ContactComponent } from './contact/contact.component';
 import { BlogsComponent } from './blogs/blogs.component';
+import { FooterComponent } from './footer/footer.component';
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, AccueilComponent, HeaderComponent,BlogsComponent,LoginComponent,ContactComponent],
+  imports: [RouterOutlet, AccueilComponent, HeaderComponent,BlogsComponent,LoginComponent,ContactComponent,FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

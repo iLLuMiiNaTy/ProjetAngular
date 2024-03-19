@@ -7,7 +7,4 @@ export interface BlogDetails {
     vote_count: number;
     newUrl: boolean;
     author: string;
-    visibility: string;
-    // Liste des utilisateurs ayant accès au blog restreint
-    restrictedUsers: string[];
   }

@@ -3,6 +3,7 @@ import { AccueilComponent } from './accueil/accueil.component';
 import { LoginComponent } from './login/login.component';
 import { ContactComponent } from './contact/contact.component';
 import { BlogsComponent } from './blogs/blogs.component';
+import { FooterComponent } from './footer/footer.component';
 
 
 export const routes: Routes = [
@@ -17,6 +18,9 @@ export const routes: Routes = [
 },
 {
     path:'blogs', component : BlogsComponent
+},
+{
+    path:'footer', component : FooterComponent
 }
 
 ];
