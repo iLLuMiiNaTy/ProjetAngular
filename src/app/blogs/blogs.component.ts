@@ -27,7 +27,9 @@ export class BlogsComponent {
     release_date: '',
     author: '',
     vote_count: 0,
-    newUrl: true
+    newUrl: true,
+    visibility: '',
+    restricted_users: []
   };
 
   ngOnInit(): void {
@@ -67,7 +69,9 @@ export class BlogsComponent {
         vote_count: 0,
         author: '',
         newUrl: true,
-        id: this.generateNewId()
+        id: this.generateNewId(),
+        visibility: '',
+        restricted_users: []
       };
     } else {
       alert('Veuillez compléter tous les champs');

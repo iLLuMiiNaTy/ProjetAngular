@@ -36,7 +36,22 @@
                   <textarea class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" [(ngModel)]="nouveauBlog.overview" name="text"></textarea><br>
                 </div>
               </div>
-              <div class="md:flex md:items-center">
+              <div class="md:flex md:items-center mb-6">
+                <div class="md:w-1/3">
+                  <label class="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" for="inline-full-name">Visibilité:</label><br>
+                </div>
+                <div class="relative md:w-2/3">
+                  <select class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" [(ngModel)]="nouveauBlog.visibility" name="visibility" id="grid-state">
+                    <option [ngValue]="'public'">Public</option>
+                    <option [ngValue]="'private'">Privé</option>
+                    <option [ngValue]="'restricted'">Restreint</option>
+                  </select><br>
+                </div>
+              </div>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                  </div>
+              <div class="md:flex md:items-center"> 
                 <div class="md:w-1/3"></div>
                 <div class="md:w-2/3">
                   <button class="shadow bg-yellow-600 hover:bg-yellow-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded" type="submit">Publier un nouveau blog</button>
@@ -54,8 +69,8 @@
                     <label class="block text-gray-500 font-bold md:text-5xl mb-1 md:mb-0 pr-4">Blogs</label><br>
                       <div class="flex flex-wrap -mx-4">
                           @for (blog of blogs; track blog){
-                            <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 xl:w-1/4 px-4 mb-8 dark:text-gray-200">
-                              <button class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md">
+                            <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 xl:w-1/4 px-4 mb-8 dark:text-gray-200" *ngIf="blog.visibility === 'public' || !blog.visibility">
+                              <div class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center">
                                   <img [src]="getFullImageUrl(blog.poster_path, blog.newUrl)" alt="Image" class="mb-4 rounded-md" srcset="">
                                   <h2 class="text-3xl font-bold underline mb-2"> {{ blog.title }} </h2>
                                   <h3 class="text-xl font-bold mb-2">{{ blog.vote_count }} likes</h3>
@@ -67,7 +82,11 @@
                                       par iLLu
                                     </span>
                                   </h3>
-                              </button>
+                                  
+                                    <button class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded" (click)="supprimerBlog(blog.id)">Supprimer</button>
+                                  
+                                  
+                                </div>
                             </div>  
                           }
                       </div>

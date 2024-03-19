@@ -7,4 +7,6 @@ export interface BlogDetails {
     vote_count: number;
     newUrl: boolean;
     author: string;
+    visibility: string;
+    restricted_users: string[];
   }
