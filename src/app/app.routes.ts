@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { ContactComponent } from './contact/contact.component';
 import { BlogsComponent } from './blogs/blogs.component';
 import { FooterComponent } from './footer/footer.component';
+import { CompteComponent } from './compte/compte.component';
 
 
 export const routes: Routes = [
@@ -21,6 +22,9 @@ export const routes: Routes = [
 },
 {
     path:'footer', component : FooterComponent
+},
+{
+    path:'compte', component : CompteComponent
 }
 
 ];
