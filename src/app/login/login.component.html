@@ -5,33 +5,30 @@
 	<link rel="stylesheet" type="text/css">
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
 </head>
-<body *ngIf="!isLoggedIn">
+<body>
 	<div class="main">  	
 		<input type="checkbox" id="chk" aria-hidden="true">
 
-		<div class="signup">
-			<form (submit)="ajouterUser()">
-				<label for="chk" aria-hidden="true">S'inscrire </label>
-				<input type="text" name="txt" placeholder="Prénom" required="" [(ngModel)]="newUser.prenom">
-				<input type="text" name="txt" placeholder="Nom" required="" [(ngModel)]="newUser.nom">
-				<input type="text" name="txt" placeholder="Numero de téléphone" required="" [(ngModel)]="newUser.phone_number">
-				<input type="email" name="email" placeholder="Email" required="" [(ngModel)]="newUser.email">
-				<input type="password" name="pswd" placeholder="Mot de passe" required="" [(ngModel)]="newUser.password">
-				<button>S'inscrire</button>
-			</form>
-		</div>
+			<div class="signup">
+				<form>
+					<label for="chk" aria-hidden="true">S'inscrire </label>
+					<input type="text" name="txt" placeholder="Prénom" required="">
+					<input type="text" name="txt" placeholder="Nom" required="">
+                    <input type="text" name="txt" placeholder="Numero de téléphone" required="">
+                    <input type="email" name="email" placeholder="Email" required="">
+					<input type="password" name="pswd" placeholder="Mot de passe" required="">
+					<button>S'inscrire</button>
+				</form>
+			</div>
 
-		<div class="login">
-			<form (ngSubmit)="handleLogin()" (submit)="false">
-				<label for="chk" aria-hidden="true">Connexion</label>
-				<input type="email" name="email" placeholder="Email" required="" [(ngModel)]="newUser.email">
-				<input type="password" name="pswd" placeholder="Mot de passe" required="" [(ngModel)]="newUser.password">
-				<button type="submit">Connexion</button>
-			</form>
-		</div>
+			<div class="login">
+				<form>
+					<label for="chk" aria-hidden="true">Connexion</label>
+					<input type="email" name="email" placeholder="Email" required="">
+					<input type="password" name="pswd" placeholder="Mot de passe" required="">
+					<button>Connexion</button>
+				</form>
+			</div>
 	</div>
-</body>
-<body *ngIf="isLoggedIn">
-	<label>Hello blogs</label>	
 </body>
 </html>
