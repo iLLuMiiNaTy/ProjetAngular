@@ -1,0 +1,31 @@
+<body *ngIf="!isLogged">
+	<div class="main">  	
+		<input type="checkbox" id="chk" aria-hidden="true">
+
+		<div class="signup">
+			<form (submit)="ajouterUser()">
+				<label for="chk" aria-hidden="true">S'inscrire </label>
+				<input type="text" name="txt" placeholder="Prénom" required="" [(ngModel)]="newUser.prenom">
+				<input type="text" name="txt" placeholder="Nom" required="" [(ngModel)]="newUser.nom">
+				<input type="text" name="txt" placeholder="Numero de téléphone" required="" [(ngModel)]="newUser.phone_number">
+				<input type="email" name="email" placeholder="Email" required="" [(ngModel)]="newUser.email">
+				<input type="password" name="pswd" placeholder="Mot de passe" required="" [(ngModel)]="newUser.password">
+				<button>S'inscrire</button>
+			</form>
+		</div>
+
+		<div class="login">
+			<form (ngSubmit)="handleLogin()" (submit)="false">
+				<label for="chk" aria-hidden="true">Connexion</label>
+				<input type="email" name="email" placeholder="Email" required="" [(ngModel)]="newUser.email">
+				<input type="password" name="pswd" placeholder="Mot de passe" required="" [(ngModel)]="newUser.password">
+				<button type="submit">Connexion</button>
+			</form>
+		</div>
+	</div>
+</body>
+<div class="min-h-screen bg-gray-100 dark:bg-gray-900" *ngIf="isLogged">
+	<p>Connecté</p>
+    <p>Bienvenue, {{ user?.prenom }} {{ user?.nom }}</p>
+    <button class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded" (click)="handleLogout()">Déconnexion</button>
+</div>
