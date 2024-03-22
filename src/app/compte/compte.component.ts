@@ -27,9 +27,11 @@ export class CompteComponent {
   };
 
   ngOnInit(): void {
-    this.isLogged = !!this.authService.getUser();
-    this.user = this.authService.getUser();
-    console.log(this.user);
+    this.authService.userLoggedIn.subscribe(() => {
+      this.isLogged = !!this.authService.getUser();
+      this.user = this.authService.getUser();
+      console.log(this.user);
+    });
   }
 
   constructor(private authService: AuthService) {
@@ -76,6 +78,7 @@ export class CompteComponent {
         alert('Connexion réussie');
         this.authService.setUser(user);
         this.isLogged = true;
+        this.authService.userLoggedIn.emit();
       } else {
         alert('Email ou mot de passe incorrect');
       } 
