@@ -10,7 +10,7 @@ import moment from 'moment';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
   
