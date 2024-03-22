@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,5 +25,12 @@ export class AuthService {
   clearUser() {
     this.user = null;
     localStorage.removeItem('user');
+  }
+
+  updateUser(user: any): Observable<any> {
+    this.user = user;
+    localStorage.setItem('user', JSON.stringify(user));
+    console.log(user);
+    return user;
   }
 }
