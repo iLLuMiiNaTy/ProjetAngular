@@ -34,6 +34,10 @@ export class BlogsComponent {
 
   ngOnInit(): void {
     this.loadMovies();
+    const storedBlogs = localStorage.getItem('blogs');
+    if (storedBlogs) {
+      this.blogs = JSON.parse(storedBlogs);
+    }
   }
 
   loadMovies() {
