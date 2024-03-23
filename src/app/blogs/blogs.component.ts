@@ -19,6 +19,24 @@ export class BlogsComponent {
   private blogService = inject(BlogService);
   blogs: BlogDetails[] = [];
 
+  selectedBlog: BlogDetails | null = null; // Variable pour stocker le blog sélectionné
+
+    isModalOpen = false; // Variable pour indiquer si la fenêtre modale est ouverte
+ // Méthode pour ouvrir la fenêtre modale avec les détails du blog sélectionné
+ openModal(blog: BlogDetails) {
+  this.selectedBlog = blog;
+  // Afficher la fenêtre modale
+  document.getElementById('blog-details-modal')!.classList.remove('hidden');
+}
+
+// Méthode pour fermer la fenêtre modale
+closeModal() {
+  this.selectedBlog = null;
+  // Cacher la fenêtre modale
+  document.getElementById('blog-details-modal')!.classList.add('hidden');
+}
+
+  
   nouveauBlog = {
     id: 100,
     title: '',
@@ -103,5 +121,6 @@ export class BlogsComponent {
       console.error(`Blog avec l'ID ${id} non trouvé`);
     }
   }
+
 }
 

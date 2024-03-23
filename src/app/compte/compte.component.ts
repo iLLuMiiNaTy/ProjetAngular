@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { UserDetails } from '../interface/user-details';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-compte',
@@ -27,17 +28,25 @@ export class CompteComponent {
   };
 
   ngOnInit(): void {
-    this.isLogged = !!this.authService.getUser();
-    this.user = this.authService.getUser();
-    console.log(this.user);
+    this.authService.userLoggedIn.subscribe(() => {
+      this.isLogged = !!this.authService.getUser();
+      this.user = this.authService.getUser();
+      console.log(this.user);
+    });
   }
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
     //localStorage.clear();
     const storedUsers = localStorage.getItem('users');
     if (storedUsers) {
       this.users = JSON.parse(storedUsers);
     }
+  }
+
+  reloadPage() {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate(['/compte']);
+    });
   }
 
   ajouterUser() {
@@ -64,6 +73,30 @@ export class CompteComponent {
     }
   }
 
+  updateUser() {
+    if (this.newUser.nom && this.newUser.prenom && this.newUser.phone_number && this.newUser.email && this.newUser.password) {
+      const userIndex = this.users.findIndex(user => user.email === this.newUser.email);
+      if (userIndex !== -1) {
+        this.authService.updateUser(this.newUser)
+        this.newUser.isLogged = true;
+        this.users[userIndex] = this.newUser;
+        localStorage.setItem('users', JSON.stringify(this.users));
+        this.authService.setUser(this.newUser);
+        this.authService.userLoggedIn.emit();
+        }
+      }  
+      this.newUser = {
+        id: this.generateNewId(),
+        nom: '',
+        prenom: '',
+        password: '',
+        email: '',
+        phone_number: '',
+        isLogged: false
+    };
+    //this.reloadPage();
+  }
+
   generateNewId(): number {
     const maxId = Math.max(...this.users.map(user => user.id));
     return maxId + 1;
@@ -76,6 +109,7 @@ export class CompteComponent {
         alert('Connexion réussie');
         this.authService.setUser(user);
         this.isLogged = true;
+        this.authService.userLoggedIn.emit();
       } else {
         alert('Email ou mot de passe incorrect');
       } 
