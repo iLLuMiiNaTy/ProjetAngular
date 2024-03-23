@@ -64,7 +64,7 @@
           <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
               <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                   <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <select [(ngModel)]="selectedBlogType">
+                    <select [(ngModel)]="selectedBlogType" class="select1">
                       <option value="all">Tous</option>
                       <option value="public">Publics</option>
                       <option value="private">Privés</option>
@@ -100,7 +100,7 @@
   </div>
 
 <!-- Fenêtre modale pour afficher les détails du blog -->
-<div class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden" id="details-modal">
+<div class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden" id="blog-details-modal">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md mx-auto w-3/4 md:w-1/2 p-4" *ngIf="selectedBlog">
     <!-- Contenu des détails du blog -->
     <h2 class="text-2xl font-bold mb-4 text-white">{{ selectedBlog.title }}</h2>
