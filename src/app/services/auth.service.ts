@@ -1,36 +1,42 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  user: any;
-  userLoggedIn = new EventEmitter<void>();
+  private userSubject: BehaviorSubject<any>;
 
-  constructor() { }
+  constructor() {
+    this.userSubject = new BehaviorSubject(this.getUserFromLocalStorage());
+  }
 
   setUser(user: any) {
-    this.user = user;
-    localStorage.setItem('user', JSON.stringify(user));
+    this.userSubject.next(user);
+    localStorage.setItem('userLogged', JSON.stringify(user));
   }
 
   getUser() {
-    if (!this.user) {
-      this.user = JSON.parse(localStorage.getItem('user') as string);
-    }
-    return this.user;
+    return this.userSubject.value;
+  }
+
+  getUserFromLocalStorage() {
+    return JSON.parse(localStorage.getItem('userLogged') as string);
   }
 
   clearUser() {
-    this.user = null;
-    localStorage.removeItem('user');
+    this.userSubject.next(null);
+    localStorage.removeItem('userLogged');
   }
 
   updateUser(user: any): Observable<any> {
-    this.user = user;
-    localStorage.setItem('user', JSON.stringify(user));
+    this.userSubject.next(user);
+    localStorage.setItem('userLogged', JSON.stringify(user));
     console.log(user);
     return user;
+  }
+
+  userLoggedIn() {
+    return this.userSubject.asObservable();
   }
 }
