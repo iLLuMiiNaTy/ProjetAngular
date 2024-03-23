@@ -8,4 +8,6 @@ export interface BlogDetails {
     newUrl: boolean;
     author: string;
     visibility: string;
+    comments: string[];
+    review: string;
   }

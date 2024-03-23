@@ -23,6 +23,7 @@ export class BlogsComponent {
   users: UserDetails[] = [];
   user: any;
   selectedBlogType = 'all'; // Variable pour stocker le type de blog sélectionné
+  newComment = ''; // Variable pour stocker le nouveau commentaire
 
   selectedBlog: BlogDetails | null = null; // Variable pour stocker le blog sélectionné
 
@@ -51,7 +52,9 @@ closeModal() {
     author: '',
     vote_count: 0,
     newUrl: true,
-    visibility: ''
+    visibility: '',
+    comments: [],
+    review: ''
   };
 
   ngOnInit(): void {
@@ -106,7 +109,9 @@ closeModal() {
         author: '',
         newUrl: true,
         id: 0,
-        visibility: ''
+        visibility: '',
+        comments: [],
+        review: ''
       };
     } else {
       alert('Veuillez compléter tous les champs');
@@ -132,5 +137,26 @@ closeModal() {
     return ((blog.id === this.user.id_blog && (this.selectedBlogType === 'all' || blog.visibility === this.selectedBlogType)) || 
             (this.user.friends.some((friend: { id_blog: number; }) => blog.id === friend.id_blog) && blog.visibility === 'friend' && blog.visibility === this.selectedBlogType));
   }
-}
+
+  addComment(selectedBlog: BlogDetails) {
+    if (this.newComment) {
+      // Ajouter le nouveau commentaire au blog sélectionné
+        selectedBlog.comments.push(this.newComment);
+        // Trouver l'index du blog sélectionné dans le tableau de blogs
+        const index = this.blogs.findIndex(blog => blog.id === selectedBlog.id);
+        // Si le blog sélectionné est trouvé
+        if (index !== -1) {
+          // Mettre à jour le blog dans le tableau de blogs
+          this.blogs[index] = selectedBlog;
+          // Mettre à jour le localStorage
+          localStorage.setItem('blogs', JSON.stringify(this.blogs));
+        } else {
+          // Afficher un message d'erreur si le blog sélectionné n'est pas trouvé
+          console.error(`Blog avec l'ID ${selectedBlog.id} non trouvé`);
+        }
+        // Réinitialiser le nouveau commentaire
+        this.newComment = '';
+      }
+    }
+  }
 
