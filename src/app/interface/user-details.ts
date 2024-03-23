@@ -5,5 +5,5 @@ export interface UserDetails {
     phone_number: string;
     email: string;
     password: string;
-    isLogged: boolean;
+    id_blog: number;
   }
