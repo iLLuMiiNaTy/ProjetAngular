@@ -8,5 +8,4 @@ export interface BlogDetails {
     newUrl: boolean;
     author: string;
     visibility: string;
-    restricted_users: string[];
   }

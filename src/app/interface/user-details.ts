@@ -6,4 +6,5 @@ export interface UserDetails {
     email: string;
     password: string;
     id_blog: number;
+    friends: string[];
   }

@@ -19,10 +19,10 @@ const imgUrl = environment.imgUrl
 })
 export class BlogsComponent {
   isLogged = false;
-  private blogService = inject(BlogService);
   blogs: BlogDetails[] = [];
   users: UserDetails[] = [];
   user: any;
+  selectedBlogType = 'all'; // Variable pour stocker le type de blog sélectionné
 
   selectedBlog: BlogDetails | null = null; // Variable pour stocker le blog sélectionné
 
@@ -51,16 +51,13 @@ closeModal() {
     author: '',
     vote_count: 0,
     newUrl: true,
-    visibility: '',
-    restricted_users: []
+    visibility: ''
   };
 
   ngOnInit(): void {
-    this.loadMovies();
     this.authService.userLoggedIn().subscribe(() => {
       this.isLogged = !!this.authService.getUser();
       this.user = this.authService.getUser();
-      console.log('Connected user', this.user);
     });
   }
 
@@ -75,17 +72,6 @@ closeModal() {
       this.blogs = JSON.parse(storedBlogs);
     }
     console.log('Blogs', this.blogs);
-  }
-
-  loadMovies() {
-    this.blogService.getMovies().subscribe({
-      next: (res: any) => {
-        const fetchedBlogs = res.results as BlogDetails[];
-        this.blogs = fetchedBlogs.slice().sort((b, a) => a.vote_count - b.vote_count); // Sort fetched data
-        console.log('LoadMovies', this.blogs); // Verify sorted blogs
-      },
-      error: (error) => console.log('Error fetching movies:', error)
-    });
   }
 
   getFullImageUrl(posterPath: String, newUrl: boolean) : String{
@@ -104,6 +90,8 @@ closeModal() {
       this.nouveauBlog.release_date = dateFormatee;
       //initialiser l'id du blog avec l'id du blog de l'utilisateur actuellement connecté
       this.nouveauBlog.id = this.user.id_blog;
+      console.log('ID User', this.user.id_blog);
+      console.log('ID Blog', this.nouveauBlog.id);
       //initialiser l'auteur du blog avec le nom et prénom de l'utilisateur actuellement connecté
       this.nouveauBlog.author = this.user.nom + ' ' + this.user.prenom;
       console.log('Nouveau Blog', this.nouveauBlog);
@@ -118,8 +106,7 @@ closeModal() {
         author: '',
         newUrl: true,
         id: 0,
-        visibility: '',
-        restricted_users: []
+        visibility: ''
       };
     } else {
       alert('Veuillez compléter tous les champs');
@@ -139,6 +126,11 @@ closeModal() {
       // Afficher un message d'erreur si l'ID n'est pas trouvé
       console.error(`Blog avec l'ID ${id} non trouvé`);
     }
+  }
+
+  isBlogVisible(blog: BlogDetails) {
+    return ((blog.id === this.user.id_blog && (this.selectedBlogType === 'all' || blog.visibility === this.selectedBlogType)) || 
+            (this.user.friends.some((friend: { id_blog: number; }) => blog.id === friend.id_blog) && blog.visibility === 'friend' && blog.visibility === this.selectedBlogType));
   }
 }
 
