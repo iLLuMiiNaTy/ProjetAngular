@@ -7,6 +7,7 @@ import { BlogDetails } from '../interface/blog-details';
 import moment from 'moment';
 import { UserDetails } from '../interface/user-details';
 import { AuthService } from '../services/auth.service';
+import { CommentDetails } from '../interface/comment-details';
 
 const imgUrl = environment.imgUrl
 
@@ -21,9 +22,15 @@ export class BlogsComponent {
   isLogged = false;
   blogs: BlogDetails[] = [];
   users: UserDetails[] = [];
+  comments: CommentDetails[] = [];
   user: any;
   selectedBlogType = 'all'; // Variable pour stocker le type de blog sélectionné
-  newComment = ''; // Variable pour stocker le nouveau commentaire
+
+  newComment: CommentDetails = {
+    user: {id: 0, prenom: '', nom: '', phone_number: '', email: '', password: '', id_blog: 0, friends: []},
+    message: '',
+    date: moment(new Date()).format('DD/MM/YYYY')
+  }; // Variable pour stocker le nouveau commentaire
 
   selectedBlog: BlogDetails | null = null; // Variable pour stocker le blog sélectionné
 
@@ -54,7 +61,9 @@ closeModal() {
     newUrl: true,
     visibility: '',
     comments: [],
-    review: ''
+    review: '',
+    liked: false,
+    likedBy: []
   };
 
   ngOnInit(): void {
@@ -93,11 +102,8 @@ closeModal() {
       this.nouveauBlog.release_date = dateFormatee;
       //initialiser l'id du blog avec l'id du blog de l'utilisateur actuellement connecté
       this.nouveauBlog.id = this.user.id_blog;
-      console.log('ID User', this.user.id_blog);
-      console.log('ID Blog', this.nouveauBlog.id);
       //initialiser l'auteur du blog avec le nom et prénom de l'utilisateur actuellement connecté
       this.nouveauBlog.author = this.user.nom + ' ' + this.user.prenom;
-      console.log('Nouveau Blog', this.nouveauBlog);
       this.blogs.push({...this.nouveauBlog});
       localStorage.setItem('blogs', JSON.stringify(this.blogs));
       this.nouveauBlog = {
@@ -111,25 +117,29 @@ closeModal() {
         id: 0,
         visibility: '',
         comments: [],
-        review: ''
+        review: '',
+        liked: false,
+        likedBy: []
       };
     } else {
       alert('Veuillez compléter tous les champs');
     }
   }
   
-  supprimerBlog(id: number) {
-    // Trouver l'index du blog avec l'ID spécifié
-    const index = this.blogs.findIndex(blog => blog.id === id);
-    // Si l'ID est trouvé
+  supprimerBlog(id: number, title: string) {
+    console.log('Suppression du blog avec l\'ID', id);
+    console.log('Titre du blog à supprimer', title);
+    // Trouver l'index du blog avec l'ID et le titre spécifiés
+    const index = this.blogs.findIndex(blog => blog.id === id && blog.title === title);
+    // Si l'ID et le titre sont trouvés
     if (index !== -1) {
       // Supprimer le blog à l'index trouvé
       this.blogs.splice(index, 1);
       // Mettre à jour le localStorage
       localStorage.setItem('blogs', JSON.stringify(this.blogs));
     } else {
-      // Afficher un message d'erreur si l'ID n'est pas trouvé
-      console.error(`Blog avec l'ID ${id} non trouvé`);
+      // Afficher un message d'erreur si l'ID et le titre ne sont pas trouvés
+      console.error(`Blog avec l'ID ${id} et le titre ${title} non trouvé`);
     }
   }
 
@@ -139,7 +149,8 @@ closeModal() {
   }
 
   addComment(selectedBlog: BlogDetails) {
-    if (this.newComment) {
+    if (this.newComment.message) {
+      this.newComment.user = this.user;
       // Ajouter le nouveau commentaire au blog sélectionné
         selectedBlog.comments.push(this.newComment);
         // Trouver l'index du blog sélectionné dans le tableau de blogs
@@ -155,8 +166,43 @@ closeModal() {
           console.error(`Blog avec l'ID ${selectedBlog.id} non trouvé`);
         }
         // Réinitialiser le nouveau commentaire
-        this.newComment = '';
+        this.newComment = {
+          user: {id: 0, prenom: '', nom: '', phone_number: '', email: '', password: '', id_blog: 0, friends: []},
+          message: '',
+          date: moment(new Date()).format('DD/MM/YYYY')
+        };
       }
+    }
+
+    toggleLike(selectedBlog: BlogDetails, userId: number) {
+      // Si le blog n'a pas encore de liste likedBy, initialisez-le avec un tableau vide
+      if (!selectedBlog.likedBy) {
+        selectedBlog.likedBy = [];
+      }
+    
+      // Vérifiez si l'utilisateur a déjà aimé le blog
+      const userHasLiked = selectedBlog.likedBy.includes(userId);
+    
+      if (userHasLiked) {
+        // Si l'utilisateur a déjà aimé le blog, enlevez son like
+        selectedBlog.vote_count--;
+        // Enlevez l'ID de l'utilisateur de la liste likedBy
+        selectedBlog.likedBy = selectedBlog.likedBy.filter(id => id !== userId);
+      } else {
+        // Si l'utilisateur n'a pas encore aimé le blog, ajoutez son like
+        selectedBlog.vote_count++;
+        // Ajoutez l'ID de l'utilisateur à la liste likedBy
+        selectedBlog.likedBy.push(userId);
+      }
+    
+      // Récupérer la liste des blogs du localStorage
+      let blogs = JSON.parse(localStorage.getItem('blogs') || '[]');
+      // Trouver l'index du blog sélectionné
+      const index: number = blogs.findIndex((blog: BlogDetails) => blog.id === selectedBlog.id);
+      // Mettre à jour le blog dans la liste
+      blogs[index] = selectedBlog;
+      // Réenregistrer la liste des blogs dans le localStorage
+      localStorage.setItem('blogs', JSON.stringify(blogs));
     }
   }
 

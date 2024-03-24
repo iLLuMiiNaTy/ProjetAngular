@@ -95,7 +95,8 @@
                                       par iLLu  
                                     </span>
                                     </h3>
-                                    <button class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded" (click)="supprimerBlog(blog.id)">Supprimer</button>
+                                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" (click)="toggleLike(blog, user.id)">Like</button>
+                                    <button *ngIf="blog.id === user.id_blog" class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded" (click)="supprimerBlog(blog.id, blog.title)">Supprimer</button>
                                   </div>
                               </div>  
                             }
@@ -109,29 +110,34 @@
 
 <!-- Fenêtre modale pour afficher les détails du blog -->
 <div class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden" id="blog-details-modal">
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md mx-auto w-3/4 md:w-1/2 p-4" *ngIf="selectedBlog">
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md mx-auto w-3/4 md:w-1/2 p-4 flex flex-col md:flex-row" *ngIf="selectedBlog">
     <!-- Contenu des détails du blog -->
-    <h2 class="text-2xl font-bold mb-4 text-white">{{ selectedBlog.title }}</h2>
-    <img [src]="selectedBlog.poster_path ? getFullImageUrl(selectedBlog.poster_path, selectedBlog.newUrl) : ''" alt="Image" class="mb-4 rounded-md modal-image">
-    <div class="text-white mb-4">
-      <p>Publié le: {{ selectedBlog.release_date }}</p>
-      <p *ngIf="selectedBlog?.author">Par: {{ selectedBlog.author }}</p>
-      <p *ngIf="!selectedBlog?.author">Par iLLu</p>
-      <p>Résumé: {{ selectedBlog.overview }}</p>
-      <p>Avis: {{ selectedBlog.review }}</p>
+    <div class="w-full md:w-1/2">
+      <h2 class="text-2xl font-bold mb-4 text-white">{{ selectedBlog.title }}</h2>
+      <img [src]="selectedBlog.poster_path ? getFullImageUrl(selectedBlog.poster_path, selectedBlog.newUrl) : ''" alt="Image" class="mb-4 rounded-md modal-image">
+      <div class="text-white mb-4">
+        <p *ngIf="selectedBlog?.author">Publié le: {{ selectedBlog.release_date }} par {{ selectedBlog.author }}</p>
+        <p>{{ selectedBlog.vote_count }} like</p>
+        <p *ngIf="!selectedBlog?.author">Par iLLu</p>
+        <p>Résumé: {{ selectedBlog.overview }}</p>
+        <p>Avis: {{ selectedBlog.review }}</p>
+        <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full" (click)="closeModal()">Fermer</button>
+      </div>
+    </div>
+    <div class="w-full md:w-1/2 md:pl-4">
       <div *ngFor="let comment of selectedBlog.comments">
-        <h3 class="text-xl font-bold mb-2">Commentaires :</h3>
-        <p>{{ comment }}</p><br>
+        <h3 class="text-xl font-bold mb-2">Commentaires de {{ comment.user.prenom }} {{ comment.user.nom }}:</h3>
+        <p>{{ comment.message }}</p>
+        <p>Publié le {{ comment.date }}</p><br>
       </div>
       <!-- Formulaire pour ajouter un commentaire -->
       <form (ngSubmit)="addComment(selectedBlog)">
         <h3 class="text-xl font-bold mb-2">Ajouter un commentaire :</h3>
-        <textarea [(ngModel)]="newComment" name="newComment" class="w-full p-2 mb-2" rows="3" placeholder="Votre commentaire..."></textarea>
+        <textarea [(ngModel)]="newComment.message" name="newComment" class="w-full p-2 mb-2" rows="3" placeholder="Votre commentaire..."></textarea>
         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Envoyer</button>
       </form>
     </div>
     <!-- Bouton pour fermer la fenêtre modale -->
-    <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full" (click)="closeModal()">Fermer</button>
-</div>
+  </div>
 </div>
 
