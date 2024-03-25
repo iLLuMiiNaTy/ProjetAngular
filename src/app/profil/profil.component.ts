@@ -6,13 +6,13 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-compte',
+  selector: 'app-profil',
   standalone: true,
   imports: [FormsModule, CommonModule],
-  templateUrl: './compte.component.html',
-  styleUrl: './compte.component.css'
+  templateUrl: './profil.component.html',
+  styleUrl: './profil.component.css'
 })
-export class CompteComponent {
+export class ProfilComponent {
   isLogged = false;
   users: UserDetails[] = [];
   user: any;
@@ -69,7 +69,6 @@ export class CompteComponent {
       alert('Veuillez compléter tous les champs');
     }
   }
-
   updateUser() {
     if (this.newUser.nom && this.newUser.prenom && this.newUser.phone_number && this.newUser.email && this.newUser.password) {
       const userIndex = this.users.findIndex(user => user.email === this.newUser.email);
@@ -101,19 +100,35 @@ export class CompteComponent {
     if (this.newUser.email && this.newUser.password) {
     const user = this.users.find(user => user.email === this.newUser.email && user.password === this.newUser.password);
       if (user) {
+        alert('Connexion réussie');
         this.authService.setUser(user);
         this.isLogged = true;
-        //this.reloadPage();
-        this.router.navigate(['/profil']);
+        this.reloadPage();
       } else {
         alert('Email ou mot de passe incorrect');
       } 
     }
   }
-
+  togglePasswordVisibility() {
+    const passwordInput = document.getElementById('passwordInput') as HTMLInputElement;
+    const passwordToggleIcon = document.getElementById('passwordToggleIcon');
+    if (passwordInput && passwordToggleIcon) {
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            passwordToggleIcon.classList.remove('fa-eye');
+            passwordToggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = "password";
+            passwordToggleIcon.classList.remove('fa-eye-slash');
+            passwordToggleIcon.classList.add('fa-eye');
+        }
+    }
+}
   handleLogout() {
     this.authService.clearUser();
     this.isLogged = false;
+    // Navigate to home page
+    this.router.navigate(['/compte']);
   }
 
   getFullImageUrl(posterPath: String) : String{

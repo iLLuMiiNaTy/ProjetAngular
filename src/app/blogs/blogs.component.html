@@ -65,45 +65,46 @@
               <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                   <div class="p-6 text-gray-900 dark:text-gray-100">
                     <label class="block text-gray-500 font-bold md:text-5xl mb-1 md:mb-0 pr-4">Le Top Des Blogs</label><br>
-                      <div class="flex flex-wrap -mx-4">
-                          @for (blog of blogs; track blog){
-                            <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 xl:w-1/4 px-4 mb-8" *ngIf="blog.visibility === 'public' || !blog.visibility">
-                              <div class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center">
-                                  <img [src]="getFullImageUrl(blog.poster_path, blog.newUrl)" alt="Image" class="mb-4 rounded-md cursor-pointer" (click)="openModal(blog)">
-                                  <h2 class="text-3xl font-bold underline mb-2"> {{ blog.title }} </h2>
-                                  <h3 class="text-xl font-bold mb-2">{{ blog.vote_count }} likes</h3>
-                                  <h3 class="text-xs text-white mb-4"> Publier le {{ blog.release_date }}
-                                    <span *ngIf="blog.author">
-                                      par {{ blog.author }}
-                                    </span>
-                                    <span *ngIf="!blog.author">
-                                      par iLLu  
-                                    </span>
-                                    </h3>
-                                    <button class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded" (click)="supprimerBlog(blog.id)">Supprimer</button>
-                                  </div>
-                              </div>  
-                            }
-                        </div>
+                    <div class="flex flex-wrap -mx-4">
+                      @for (blog of blogs; track blog){
+                        <div class="w-full sm:w-1/2 md:w-1/4 lg:w-1/4 xl:w-1/4 px-4 mb-8" *ngIf="blog.visibility === 'public' || !blog.visibility">
+                          <div class="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md text-center">
+                              <img [src]="getFullImageUrl(blog.poster_path, blog.newUrl)" alt="Image" class="mb-4 rounded-md cursor-pointer" (click)="openModal(blog)">
+                              <h2 class="text-3xl font-bold underline mb-2"> {{ blog.title }} </h2>
+                              <h3 class="text-xl font-bold mb-2">{{ blog.vote_count }} likes</h3>
+                              <h3 class="text-xs text-white mb-4"> <strong>Publier le :</strong> {{ blog.release_date }}
+                                <span *ngIf="blog.author">
+                                  <strong>Par :</strong> {{ blog.author }}
+                                </span><br>
+                                <span *ngIf="!blog.author">
+                                  <strong>Par :</strong> iLLu  
+                                </span>
+                                </h3>
+                                <button class="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded" (click)="supprimerBlog(blog.id)">Supprimer</button>
+                              </div>
+                          </div>  
+                        }
                     </div>
+                  </div>
                 </div>
             </div>
         </div>
     </main>
   </div>
-
+ 
 <!-- Fenêtre modale pour afficher les détails du blog -->
 <div class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden" id="blog-details-modal">
   <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md mx-auto w-3/4 md:w-1/2 p-4" *ngIf="selectedBlog">
-    <!-- Contenu des détails du blog -->
-    <h2 class="text-2xl font-bold mb-4 text-white">{{ selectedBlog.title }}</h2>
-    <img [src]="selectedBlog.poster_path ? getFullImageUrl(selectedBlog.poster_path, selectedBlog.newUrl) : ''" alt="Image" class="mb-4 rounded-md modal-image">
-    <div class="text-gray-700 text-white mb-4">
-      <p>Publié le: {{ selectedBlog.release_date }}</p>
-      <p *ngIf="selectedBlog?.author">Par: {{ selectedBlog.author }}</p>
-      <p *ngIf="!selectedBlog?.author">Par iLLu</p>
-      <p>Résumé: {{ selectedBlog.overview }}</p>
-    </div>
+<!-- Contenu des détails du blog -->
+<h2 class="text-2xl font-bold mb-4 text-white custom-text">{{ selectedBlog.title }}</h2>
+<img [src]="selectedBlog.poster_path ? getFullImageUrl(selectedBlog.poster_path, selectedBlog.newUrl) : ''" alt="Image" class="mb-4 rounded-md modal-image">
+<div class="text-gray-700 text-white mb-4 custom-text">
+<p><strong>Publié le :</strong> {{ selectedBlog.release_date }}</p>
+<p *ngIf="selectedBlog?.author"><strong>Par:</strong> {{ selectedBlog.author }}</p>
+<p *ngIf="!selectedBlog?.author"><strong>Par :</strong> iLLu</p>
+<p><u><strong>Résumé :</strong></u></p>
+<p> {{ selectedBlog.overview }}</p>
+</div>
     <!-- Bouton pour fermer la fenêtre modale -->
     <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full" (click)="closeModal()">Fermer</button>
   </div>

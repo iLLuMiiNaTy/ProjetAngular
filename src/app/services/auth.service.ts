@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -13,7 +13,11 @@ export class AuthService {
 
   setUser(user: any) {
     this.userSubject.next(user);
-    localStorage.setItem('userLogged', JSON.stringify(user));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('userLogged', JSON.stringify(user));
+      localStorage.setItem('userToken', 'votre_token'); // Ajoutez cette ligne
+
+    }
   }
 
   getUser() {
@@ -21,22 +25,37 @@ export class AuthService {
   }
 
   getUserFromLocalStorage() {
-    return JSON.parse(localStorage.getItem('userLogged') as string);
+    if (typeof localStorage !== 'undefined') {
+      return JSON.parse(localStorage.getItem('userLogged') as string);
+    }
+    return null;
   }
 
   clearUser() {
     this.userSubject.next(null);
-    localStorage.removeItem('userLogged');
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('userLogged');
+      localStorage.removeItem('userToken'); // Ajoutez cette ligne
+    }
   }
 
   updateUser(user: any): Observable<any> {
     this.userSubject.next(user);
-    localStorage.setItem('userLogged', JSON.stringify(user));
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('userLogged', JSON.stringify(user));
+    }
     console.log(user);
     return user;
   }
 
   userLoggedIn() {
     return this.userSubject.asObservable();
+    
   }
+
+  isLoggedIn(): boolean {
+    return localStorage.getItem('userToken') !== null;
+
+  }
+
 }

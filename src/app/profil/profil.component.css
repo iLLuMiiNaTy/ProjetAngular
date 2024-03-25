@@ -1,0 +1,79 @@
+.container {
+    max-width: 700px;
+    margin: auto;
+    padding: 20px;
+    background-color: #ffffffa8;
+    border-radius: 10px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+}
+
+h2 {
+    font-weight: bold; /* Mettre le titre en gras */
+}
+
+.profile-button {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #ffffffa8;
+}
+
+.profile-button:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.profile-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.5);
+}
+
+.form-control {
+    text-align: center;
+    border: 1px solid gray; /* Ajouter un contour gris aux inputs */
+}
+
+.profile-button {
+    text-align: center;
+}
+
+.img-account-profile {
+    height: 150px;
+    margin-bottom: 15px; /* Centrer l'image au-dessus du nom et du prénom */
+    border: 1px solid gray; /* Ajouter un contour gris autour de l'image */
+}
+
+.labels {
+    font-size: 16px; /* Augmenter la taille des labels */
+    color: #333; /* Changer la couleur des labels */
+    display: block; /* Mettre les labels sur une nouvelle ligne */
+    font-weight: bold; /* Mettre les labels en gras */
+}
+
+.profile-button {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+}
+
+.profile-button:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+.profile-button:focus {
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,0.5);
+}
+
+.bg-gray-200 {
+    background-color: #f2f6fc; /* Changer la couleur de fond de la page */
+}
+.profile-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 150px; /* Ajustez la hauteur selon votre besoin */
+}
+
+.font-weight-bold {
+    font-weight: bold; /* Mettre le nom et le prénom en gras */
+}
+

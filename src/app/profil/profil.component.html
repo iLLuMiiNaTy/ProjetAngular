@@ -1,0 +1,77 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<body>
+<section class="text-gray-900 bg-gray-900 body-font">
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="container rounded bg-white mt-5 mb-5">
+            <div class="row">
+                <div class="d-flex justify-content-center align-items-center mb-3">
+                    <h2 class="text-center font-weight-bold">Informations Personnelles</h2>
+                    <div class="row">
+                        <div class="col-md-12 d-flex justify-content-center align-items-center"> <!-- Ajoutez les classes d-flex, justify-content-center et align-items-center ici -->
+                            <div class="text-center">
+                                <br><br>
+                                <div class="col-md-12 d-flex justify-content-center align-items-center">
+                                    <div class="profile-image-container">
+                                        <img class="rounded-circle img-account-profile" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+                                    </div>
+                                </div>
+                                <div class="p-3 py-5">
+                                    <span class="font-weight-bold mt-3">Bienvenue {{ user?.prenom }} {{ user?.nom }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="p-3 py-5">
+                        <form class="w-full max-w-sm">
+                            <div class="mb-3">
+                                <label class="labels">Nom : </label>
+                                <input type="text" class="form-control" [(ngModel)]="user.nom" name="nom">
+                            </div>
+                            <div class="mb-3">
+                                <label class="labels">Prénom : </label>
+                                <input type="text" class="form-control" [(ngModel)]="user.prenom" name="prenom">
+                            </div>
+                            <div class="mb-3">
+                                <label class="labels">Téléphone : </label>
+                                <input type="text" class="form-control" [(ngModel)]="user.phone_number" name="telephone">
+                            </div>
+                            <div class="mb-3">
+                                <label class="labels">Email : </label>
+                                <input type="text" class="form-control" [(ngModel)]="user.email" name="email">
+                            </div>
+                            <div class="mb-3 position-relative">                                
+                                <label class="labels">Mot de passe : </label>
+                                <input id="passwordInput" type="password" class="form-control" [(ngModel)]="user.password" name="password" style="padding-right: 40px;">
+                            </div>
+                            <i id="passwordToggleIcon" class="fa fa-eye text-gray-900 position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); z-index: 100;" (click)="togglePasswordVisibility()"></i>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-primary profile-button font-bold py-2 px-4 rounded" type="submit">Modifier vos informations</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function togglePasswordVisibility() {
+        var passwordInput = document.getElementById('passwordInput');
+        var passwordToggleIcon = document.getElementById('passwordToggleIcon');
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            passwordToggleIcon.classList.remove('fa-eye');
+            passwordToggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = "password";
+            passwordToggleIcon.classList.remove('fa-eye-slash');
+            passwordToggleIcon.classList.add('fa-eye');
+        }
+    }
+</script>
+</body>
+

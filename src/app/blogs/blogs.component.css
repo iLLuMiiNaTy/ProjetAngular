@@ -4,3 +4,7 @@
     max-height: 300px; /* Ajustez cette valeur selon vos besoins */
     height: auto;
   }
+  
+  .custom-text {
+    color: white;
+}
