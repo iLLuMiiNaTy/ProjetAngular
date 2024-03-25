@@ -16,15 +16,21 @@ export class CompteComponent {
   isLogged = false;
   users: UserDetails[] = [];
   user: any;
+  newId: number = 100
+
+  // utilisé pour gérer une amitié
+  searchTerm: string = '';
+  foundUsers: UserDetails[] = [];
 
   newUser = {
-    id: 100,
+    id: this.newId,
     nom: '',
     prenom: '',
     password: '',
     email: '',
     phone_number: '',
-    id_blog: 100
+    id_blog: this.newId,
+    friends: []
   };
 
   ngOnInit(): void {
@@ -52,18 +58,22 @@ export class CompteComponent {
     if (this.newUser.nom && this.newUser.prenom && this.newUser.phone_number && this.newUser.email && this.newUser.password) {
       if (!this.users.some(user => user.email === this.newUser.email)) {
         this.users.push(this.newUser);
+        this.newId = this.users.length + 1; // Générer un nouvel ID
+        this.newUser.id = this.newId;
+        this.newUser.id_blog = this.newId;
         localStorage.setItem('users', JSON.stringify(this.users));
       } else {
         alert('Cet utilisateur existe déjà');
       }
       this.newUser = {
-        id: this.generateNewId(),
+        id: this.newId,
         nom: '',
         prenom: '',
         password: '',
         email: '',
         phone_number: '',
-        id_blog: this.generateNewId()
+        id_blog: this.newId,
+        friends: []
       };
     } else {
       alert('Veuillez compléter tous les champs');
@@ -74,6 +84,9 @@ export class CompteComponent {
     if (this.newUser.nom && this.newUser.prenom && this.newUser.phone_number && this.newUser.email && this.newUser.password) {
       const userIndex = this.users.findIndex(user => user.email === this.newUser.email);
       if (userIndex !== -1) {
+        this.newId = this.users.length + 1; // Générer un nouvel ID
+        this.newUser.id = this.newId;
+        this.newUser.id_blog = this.newId;
         this.authService.updateUser(this.newUser)
         this.users[userIndex] = this.newUser;
         localStorage.setItem('users', JSON.stringify(this.users));
@@ -81,20 +94,16 @@ export class CompteComponent {
         }
       }  
       this.newUser = {
-        id: this.generateNewId(),
+        id: this.newId,
         nom: '',
         prenom: '',
         password: '',
         email: '',
         phone_number: '',
-        id_blog: this.generateNewId()
+        id_blog: this.newId,
+        friends: []
     };
     //this.reloadPage();
-  }
-
-  generateNewId(): number {
-    const maxId = Math.max(...this.users.map(user => user.id));
-    return maxId + 1;
   }
 
   handleLogin() {
@@ -118,5 +127,34 @@ export class CompteComponent {
 
   getFullImageUrl(posterPath: String) : String{
     return posterPath;
+  }
+
+  
+  searchUser() {
+    const lowerCaseSearchTerm = this.searchTerm.toLowerCase();
+  
+    this.foundUsers = this.users.filter(user => 
+      (user.nom.toLowerCase().includes(lowerCaseSearchTerm) || user.email.toLowerCase().includes(lowerCaseSearchTerm)) &&
+      !this.user.friends.some((friend: { id: number; }) => friend.id === user.id)
+    );
+  }
+
+  addFriend(user: UserDetails) {
+    if (!this.user.friends) {
+      this.user.friends = [];
+    }
+
+    // Vérifiez si l'utilisateur est déjà un ami
+  if (!this.user.friends.some((friend: { id: number; }) => friend.id === user.id)) {
+    this.user.friends.push(user);
+    // Mettre à jour l'utilisateur dans le localStorage
+    const userIndex = this.users.findIndex(u => u.id === this.user.id);
+    if (userIndex !== -1) {
+      this.users[userIndex] = this.user;
+      localStorage.setItem('users', JSON.stringify(this.users));
+    }
+  } else {
+    alert('Cet utilisateur est déjà votre ami');
+  }
   }
 }

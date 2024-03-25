@@ -8,3 +8,36 @@
   .custom-text {
     color: white;
 }
+  .select1 {
+    width: 20%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    color: #333;
+    -webkit-appearance: none;  /* Remove default arrow in Webkit browsers */
+    -moz-appearance: none;     /* Remove default arrow in Firefox */
+    appearance: none;          /* Remove default arrow in standard browsers */
+  }
+  
+  /* Add a custom arrow for the select box */
+  select::-ms-expand {
+    display: none;
+  }
+  
+  select::after {
+    content: "\25BC";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 1em;
+    background: #ddd;
+    pointer-events: none;
+  }
+  
+  /* Change the color of the custom arrow on hover */
+  select:hover::after {
+    background: #b3b3b3;
+  }

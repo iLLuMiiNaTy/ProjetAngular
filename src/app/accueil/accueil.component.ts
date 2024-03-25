@@ -1,9 +1,20 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Importez CommonModule
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment.development';
 import { BlogService } from '../services/blog.service';
 import { BlogDetails } from '../interface/blog-details';
+
+const imgUrl = environment.imgUrl
+import { BlogService } from '../services/blog.service';
+import { BlogDetails } from '../interface/blog-details';
+import { environment } from '../../environments/environment';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { UserDetails } from '../interface/user-details';
+import { CommentDetails } from '../interface/comment-details';
+import { AuthService } from '../services/auth.service';
+import moment from 'moment';
 
 const imgUrl = environment.imgUrl
 
@@ -15,8 +26,11 @@ const imgUrl = environment.imgUrl
   styleUrl: './accueil.component.css'
 })
 export class AccueilComponent {
+  isLogged = false;
   private blogService = inject(BlogService);
   blogs: BlogDetails[] = [];
+  users: UserDetails[] = [];
+  user: any;
 
   selectedBlog: BlogDetails | null = null; // Variable pour stocker le blog sélectionné
 
@@ -28,45 +42,81 @@ export class AccueilComponent {
   document.getElementById('blog-details-modal')!.classList.remove('hidden');
 }
 
-// Méthode pour fermer la fenêtre modale
+// Méthode pour fermer la fenêtre modale// Méthode pour fermer la fenêtre modale
 closeModal() {
   this.selectedBlog = null;
   // Cacher la fenêtre modale
   document.getElementById('blog-details-modal')!.classList.add('hidden');
 }
 
-ngOnInit(): void {
-  this.loadMovies();
-}
-
-nouveauBlog = {
-  id: 100,
-  title: '',
-  overview: '',
-  poster_path: '',
-  release_date: '',
-  author: '',
-  vote_count: 0,
-  newUrl: true,
-  visibility: '',
-  restricted_users: []
-};
-
-loadMovies() {
-  this.blogService.getMovies().subscribe({
-    next: (res: any) => {
-      const fetchedBlogs = res.results as BlogDetails[];
-      this.blogs = fetchedBlogs.slice().sort((b, a) => a.vote_count - b.vote_count); // Sort fetched data
-      console.log(this.blogs); // Verify sorted blogs
-    },
-    error: (error) => console.log('Error fetching movies:', error)
-  });
-}
-getFullImageUrl(posterPath: String, newUrl: boolean) : String{
-  if(!newUrl){
-    return imgUrl + posterPath;
-  } else{
-    return posterPath;
+  ngOnInit(): void {
+    this.loadMovies();
+    this.authService.userLoggedIn().subscribe(() => {
+      this.isLogged = !!this.authService.getUser();
+      this.user = this.authService.getUser();
+    });
   }
-}
+
+  constructor(private authService: AuthService) {
+    const storedUsers = localStorage.getItem('users');
+    if (storedUsers) {
+      this.users = JSON.parse(storedUsers);
+    }
+    console.log('Users', this.users);
+    const storedBlogs = localStorage.getItem('blogs');
+    if (storedBlogs) {
+      this.blogs = JSON.parse(storedBlogs);
+    }
+    console.log('Blogs', this.blogs);
+  }
+
+  loadMovies() {
+    this.blogService.getMovies().subscribe({
+      next: (res: any) => {
+        const fetchedBlogs = res.results as BlogDetails[];
+        this.blogs = fetchedBlogs.slice().sort((b, a) => a.vote_count - b.vote_count); // Sort fetched data
+        console.log('LoadMovies', this.blogs); // Verify sorted blogs
+      },
+      error: (error) => console.log('Error fetching movies:', error)
+    });
+  }
+
+  getFullImageUrl(posterPath: String, newUrl: boolean) : String{
+    if(!newUrl){//Si l'url est importé d'un json placeholder
+      return imgUrl + posterPath;
+    } else{//Si l'url est importé manuellement
+      return posterPath;
+    }
+  }
+
+    toggleLike(selectedBlog: BlogDetails, userId: number) {
+      // Si le blog n'a pas encore de liste likedBy, initialisez-le avec un tableau vide
+      if (!selectedBlog.likedBy) {
+        selectedBlog.likedBy = [];
+      }
+    
+      // Vérifiez si l'utilisateur a déjà aimé le blog
+      const userHasLiked = selectedBlog.likedBy.includes(userId);
+    
+      if (userHasLiked) {
+        // Si l'utilisateur a déjà aimé le blog, enlevez son like
+        selectedBlog.vote_count--;
+        // Enlevez l'ID de l'utilisateur de la liste likedBy
+        selectedBlog.likedBy = selectedBlog.likedBy.filter(id => id !== userId);
+      } else {
+        // Si l'utilisateur n'a pas encore aimé le blog, ajoutez son like
+        selectedBlog.vote_count++;
+        // Ajoutez l'ID de l'utilisateur à la liste likedBy
+        selectedBlog.likedBy.push(userId);
+      }
+    
+      // Récupérer la liste des blogs du localStorage
+      let blogs = JSON.parse(localStorage.getItem('blogs') || '[]');
+      // Trouver l'index du blog sélectionné
+      const index: number = blogs.findIndex((blog: BlogDetails) => blog.id === selectedBlog.id);
+      // Mettre à jour le blog dans la liste
+      blogs[index] = selectedBlog;
+      // Réenregistrer la liste des blogs dans le localStorage
+      localStorage.setItem('blogs', JSON.stringify(blogs));
+    }
 }
