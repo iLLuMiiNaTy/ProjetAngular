@@ -17,6 +17,10 @@ export class ProfilComponent {
   users: UserDetails[] = [];
   user: any;
 
+  // utilisé pour gérer une amitié
+  searchTerm: string = '';
+  foundUsers: UserDetails[] = [];
+
   newUser = {
     id: 100,
     nom: '',
@@ -24,7 +28,8 @@ export class ProfilComponent {
     password: '',
     email: '',
     phone_number: '',
-    id_blog: 100
+    id_blog: 100,
+    friends: []
   };
 
   ngOnInit(): void {
@@ -63,7 +68,8 @@ export class ProfilComponent {
         password: '',
         email: '',
         phone_number: '',
-        id_blog: this.generateNewId()
+        id_blog: this.generateNewId(),
+        friends: []
       };
     } else {
       alert('Veuillez compléter tous les champs');
@@ -86,7 +92,8 @@ export class ProfilComponent {
         password: '',
         email: '',
         phone_number: '',
-        id_blog: this.generateNewId()
+        id_blog: this.generateNewId(),
+        friends: []
     };
     //this.reloadPage();
   }
@@ -128,10 +135,49 @@ export class ProfilComponent {
     this.authService.clearUser();
     this.isLogged = false;
     // Navigate to home page
-    this.router.navigate(['/compte']);
+    this.router.navigate(['/accueil']);
   }
 
   getFullImageUrl(posterPath: String) : String{
     return posterPath;
+  }
+
+  searchUser() {
+    if (!this.searchTerm.trim()) {
+      this.foundUsers = [];
+      return;
+    }
+    
+    const lowerCaseSearchTerm = this.searchTerm.toLowerCase();
+  
+    this.foundUsers = this.users.filter(user => 
+      (user.nom.toLowerCase().includes(lowerCaseSearchTerm) || user.email.toLowerCase().includes(lowerCaseSearchTerm)) &&
+      !this.user.friends.some((friend: { id: number; }) => friend.id === user.id)
+    );
+  }
+
+  addFriend(user: UserDetails) {
+    if (!this.user.friends) {
+      this.user.friends = [];
+    }
+
+    // Vérifiez si l'utilisateur est déjà un ami
+  if (!this.user.friends.some((friend: { id: number; }) => friend.id === user.id)) {
+    this.user.friends.push(user);
+    // Mettre à jour l'utilisateur dans le localStorage
+    const userIndex = this.users.findIndex(u => u.id === this.user.id);
+    if (userIndex !== -1) {
+      this.users[userIndex] = this.user;
+      localStorage.setItem('users', JSON.stringify(this.users));
+    }
+    alert('Utilisateur ajouté avec succès');
+    // Supprimer l'utilisateur de la liste foundUsers
+    const index = this.foundUsers.indexOf(user);
+    if (index > -1) {
+        this.foundUsers.splice(index, 1);
+    }
+  } else {
+    alert('Cet utilisateur est déjà votre ami');
+  }
   }
 }

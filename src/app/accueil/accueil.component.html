@@ -46,8 +46,7 @@
         <p *ngIf="selectedBlog?.author">Publié le: {{ selectedBlog.release_date }} par {{ selectedBlog.author }}</p>
         <p>{{ selectedBlog.vote_count }} like</p>
         <p *ngIf="!selectedBlog?.author">Par iLLu</p>
-        <p>Résumé: {{ selectedBlog.overview }}</p>
-        <p>Avis: {{ selectedBlog.review }}</p>
+        <p>Résumé: {{ selectedBlog.overview }}</p><br>
         <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full" (click)="closeModal()">Fermer</button>
       </div>
     </div>

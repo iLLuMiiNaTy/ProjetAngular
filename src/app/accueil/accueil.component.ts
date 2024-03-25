@@ -1,16 +1,9 @@
-import { Component, inject, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Importez CommonModule
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../environments/environment.development';
 import { BlogService } from '../services/blog.service';
 import { BlogDetails } from '../interface/blog-details';
-
-const imgUrl = environment.imgUrl
-import { BlogService } from '../services/blog.service';
-import { BlogDetails } from '../interface/blog-details';
-import { environment } from '../../environments/environment';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { UserDetails } from '../interface/user-details';
 import { CommentDetails } from '../interface/comment-details';
 import { AuthService } from '../services/auth.service';
