@@ -5,7 +5,6 @@ import { BlogsComponent } from './blogs/blogs.component';
 import { FooterComponent } from './footer/footer.component';
 import { CompteComponent } from './compte/compte.component';
 import { ProfilComponent } from './profil/profil.component';
-import { AuthGuard } from './services/auth.guard';
 
 export const routes: Routes = [
 {
